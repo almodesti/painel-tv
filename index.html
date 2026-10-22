@@ -1,0 +1,327 @@
+<title>FLORESTi · Painel</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;500&family=Outfit:wght@400;500;600&family=JetBrains+Mono:wght@400;500&family=Lora:ital,wght@0,500;0,600;1,500&display=swap');
+
+  /* ============================================================
+     FLORESTi — Painel de escritório (vitrine + atalhos)
+     Identidade v3.0 · alto luxo sustentável
+     Edite os ATALHOS e a GALERIA nos blocos do JS lá embaixo.
+     ============================================================ */
+
+  :root{
+    --forest-deep:#040F0E;
+    --forest-dark:#0D362E;
+    --forest-mid:#1A4A32;
+    --wood-mid:#957561;
+    --wood-light:#B89880;
+    --mist:#E9E8E8;
+    --mist-60:rgba(233,232,232,.6);
+    --mist-35:rgba(233,232,232,.35);
+    --line:rgba(233,232,232,.15);
+    --f-display:"Poppins","Helvetica Neue",sans-serif;
+    --f-ui:"Outfit","Helvetica Neue",sans-serif;
+    --f-mono:"JetBrains Mono",ui-monospace,"SF Mono",Menlo,monospace;
+    --f-serif:"Lora",Georgia,"Times New Roman",serif;
+    --mia-gold:#C49A4E;
+  }
+
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{height:100%;overflow:hidden}
+  body{
+    font-family:var(--f-ui);
+    color:var(--mist);
+    background:var(--forest-deep);
+    -webkit-font-smoothing:antialiased;
+  }
+
+  /* ---------- galeria de fundo ---------- */
+  #stage{position:fixed;inset:0;z-index:0;background:var(--forest-deep)}
+  .slide{position:absolute;inset:0;background-size:cover;background-position:center;
+         opacity:0;transition:opacity 1200ms ease-out;will-change:opacity,transform}
+  .slide.on{opacity:1}
+  .slide.kb{animation:kb 9s ease-out forwards}
+  @keyframes kb{from{transform:scale(1.005)}to{transform:scale(1.07)}}
+
+  /* ---------- scrims (legibilidade + clima luxury dark) ---------- */
+  .scrim{position:fixed;inset:0;z-index:1;pointer-events:none}
+  .scrim-v{background:
+      linear-gradient(to bottom, rgba(4,15,14,.72) 0%, rgba(4,15,14,.18) 26%, rgba(4,15,14,.12) 52%, rgba(4,15,14,.78) 90%, rgba(4,15,14,.92) 100%)}
+  .scrim-h{background:linear-gradient(to right, rgba(4,15,14,.78) 0%, rgba(4,15,14,.2) 40%, transparent 72%)}
+  .scrim-tone{background:radial-gradient(120% 90% at 50% 46%, transparent 52%, rgba(4,15,14,.5) 100%);mix-blend-mode:multiply}
+
+  /* ---------- conteúdo ---------- */
+  main{position:fixed;inset:0;z-index:5;display:flex;flex-direction:column;
+       padding:clamp(26px,4.2vh,54px) clamp(30px,4.6vw,76px)}
+
+  /* topo */
+  .top{display:flex;justify-content:space-between;align-items:flex-start;gap:24px}
+  .brand{display:flex;flex-direction:column;align-items:flex-start}
+  .lockup{display:flex;align-items:center;gap:clamp(11px,1.1vw,20px)}
+  .emblem{height:clamp(50px,5.6vw,84px);width:auto;display:block;
+          filter:drop-shadow(0 2px 16px rgba(4,15,14,.5))}
+  .brand .word{font-family:var(--f-display);font-weight:300;letter-spacing:.11em;
+               font-size:clamp(32px,4.4vw,62px);line-height:1}
+  .brand .word b{font-weight:500}
+  .brand .tag{font-family:var(--f-ui);font-weight:500;text-transform:uppercase;
+              letter-spacing:.34em;font-size:clamp(9px,.82vw,12px);color:var(--mist-60);
+              margin-top:.7em;padding-top:.7em;border-top:1px solid var(--line);display:inline-block}
+
+  .meta{display:flex;flex-direction:column;align-items:flex-end;gap:14px;text-align:right}
+  .clockline{display:flex;flex-direction:column;align-items:flex-end;gap:.25em}
+  .clock{font-family:var(--f-mono);font-weight:500;font-size:clamp(26px,3vw,42px);
+         letter-spacing:.02em;font-variant-numeric:tabular-nums;line-height:1}
+  .sub{font-family:var(--f-ui);font-size:clamp(10px,.92vw,13px);color:var(--mist-60);
+       letter-spacing:.06em}
+  .loc{font-family:var(--f-ui);text-transform:uppercase;letter-spacing:.28em;
+       font-size:clamp(8px,.72vw,10px);color:var(--mist-35)}
+
+  /* assinatura ModestIAndré (marca pessoal, bloco distinto) */
+  .maker{display:inline-flex;flex-direction:column;align-items:flex-end;gap:.28em;text-decoration:none;color:var(--mist);
+         padding:.62em .98em;border:1px solid rgba(196,154,78,.42);border-radius:5px;
+         background:rgba(4,15,14,.42);transition:all 420ms ease-out;outline:none}
+  .maker .mk-word{font-family:var(--f-serif);font-weight:600;letter-spacing:.005em;
+                  font-size:clamp(15px,1.52vw,22px);line-height:1}
+  .maker .mk-word b{font-weight:600;color:var(--mia-gold)}
+  .maker .mk-tag{font-family:var(--f-ui);text-transform:uppercase;letter-spacing:.22em;
+                 font-size:clamp(7px,.64vw,9px);color:var(--mist-35)}
+  .maker:focus-visible,.maker:focus,.maker:hover{
+    border-color:var(--mia-gold);background:rgba(196,154,78,.15);transform:translateY(-1px)}
+
+  /* legenda da obra */
+  .caption{margin-top:auto;max-width:min(640px,60vw)}
+  .cap-label{font-family:var(--f-ui);font-weight:500;text-transform:uppercase;
+             letter-spacing:.32em;font-size:clamp(9px,.82vw,12px);color:var(--wood-light)}
+  .cap-title{font-family:var(--f-display);font-weight:300;line-height:1.08;
+             font-size:clamp(28px,4vw,56px);margin:.28em 0 .34em;
+             text-wrap:balance;text-shadow:0 2px 30px rgba(4,15,14,.6)}
+  .cap-sub{font-family:var(--f-ui);font-size:clamp(12px,1.08vw,16px);color:var(--mist-60);
+           padding-top:.9em;border-top:1px solid var(--wood-mid);display:inline-block}
+  .cap-fade{opacity:0;transform:translateY(8px);transition:opacity 700ms ease-out,transform 700ms ease-out}
+  .cap-fade.show{opacity:1;transform:none}
+
+  /* rail de atalhos */
+  .rail{margin-top:clamp(22px,3.4vh,42px);display:grid;
+        grid-template-columns:repeat(8,minmax(0,1fr));gap:clamp(10px,.9vw,16px)}
+  .tile{position:relative;display:flex;flex-direction:column;gap:.75em;justify-content:space-between;
+        min-height:clamp(96px,11vh,132px);padding:clamp(13px,1.1vw,20px);
+        text-decoration:none;color:var(--mist);border-radius:6px;
+        background:rgba(4,15,14,.52);border:1px solid var(--line);
+        -webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);
+        transition:transform 420ms ease-out,border-color 420ms ease-out,background 420ms ease-out,box-shadow 420ms ease-out;
+        outline:none;overflow:hidden}
+  .tile .ico{width:clamp(22px,1.9vw,28px);height:clamp(22px,1.9vw,28px);color:var(--mist-60);
+             transition:color 420ms ease-out}
+  .tile .ico svg{width:100%;height:100%;display:block}
+  .t-txt{display:flex;flex-direction:column;gap:.15em}
+  .t-label{font-family:var(--f-ui);font-weight:500;text-transform:uppercase;
+           letter-spacing:.2em;font-size:clamp(7px,.62vw,9px);color:var(--mist-35)}
+  .t-name{font-family:var(--f-ui);font-weight:600;font-size:clamp(13px,1.12vw,17px);
+          letter-spacing:.01em;line-height:1.15}
+  .t-sub{font-family:var(--f-mono);font-weight:500;font-size:clamp(8px,.72vw,10.5px);
+         letter-spacing:.1em;color:var(--wood-light);margin-top:.2em}
+  .tile::after{content:"";position:absolute;left:0;top:0;height:3px;width:100%;
+               background:var(--wood-mid);transform:scaleX(0);transform-origin:left;
+               transition:transform 420ms ease-out}
+  .tile:focus-visible,.tile:focus,.tile:hover{
+    transform:translateY(-6px);border-color:var(--wood-mid);background:rgba(13,54,46,.74);
+    box-shadow:0 16px 40px rgba(4,15,14,.55)}
+  .tile:focus-visible .ico,.tile:focus .ico,.tile:hover .ico{color:var(--wood-light)}
+  .tile:focus-visible::after,.tile:focus::after,.tile:hover::after{transform:scaleX(1)}
+
+  /* overlay de instrução (câmeras HDMI) */
+  .overlay{position:fixed;inset:0;z-index:20;display:none;align-items:center;justify-content:center;
+           background:rgba(4,15,14,.88);-webkit-backdrop-filter:blur(7px);backdrop-filter:blur(7px);
+           padding:8vw;text-align:center}
+  .overlay.on{display:flex}
+  .ov-card{max-width:640px}
+  .ov-k{font-family:var(--f-ui);font-weight:500;text-transform:uppercase;letter-spacing:.34em;
+        font-size:clamp(10px,1vw,13px);color:var(--wood-light)}
+  .ov-h{font-family:var(--f-display);font-weight:300;font-size:clamp(30px,4.6vw,58px);
+        line-height:1.08;margin:.32em 0 .5em;text-wrap:balance}
+  .ov-h b{font-weight:500;color:var(--wood-light)}
+  .ov-p{font-family:var(--f-ui);font-size:clamp(14px,1.3vw,19px);color:var(--mist-60);line-height:1.6}
+  .ov-p b{color:var(--mist);font-weight:600}
+  .ov-hint{margin-top:2.2em;font-family:var(--f-ui);font-size:clamp(11px,1vw,14px);
+           color:var(--mist-35);letter-spacing:.04em}
+
+  @media (max-width:860px){
+    .rail{grid-template-columns:repeat(4,1fr)}
+    .scrim-h{background:none}
+  }
+  @media (prefers-reduced-motion:reduce){
+    .slide.kb{animation:none}
+    .cap-fade{transition:opacity 300ms ease}
+  }
+</style>
+
+<div id="stage"></div>
+<div class="scrim scrim-tone"></div>
+<div class="scrim scrim-h"></div>
+<div class="scrim scrim-v"></div>
+
+<main>
+  <div class="top">
+    <div class="brand">
+      <div class="lockup">
+        <img class="emblem" src="img/simbolo-floresti-branco.png" alt="">
+        <span class="word">FLOREST<b>i</b></span>
+      </div>
+      <span class="tag">Soluções Construtivas · MLC Estrutural</span>
+    </div>
+    <div class="meta">
+      <div class="clockline">
+        <span class="clock" id="clock">--:--</span>
+        <span class="sub" id="date"></span>
+        <span class="loc">Faxinal dos Guedes · SC</span>
+      </div>
+      <div class="maker" id="maker" aria-label="ModestIAndré">
+        <span class="mk-word">Modest<b>IA</b>ndré</span>
+        <span class="mk-tag">IA aplicada à operação</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="caption">
+    <div class="cap-fade show" id="cap">
+      <div class="cap-label" id="capLabel">OBRA</div>
+      <h1 class="cap-title" id="capTitle">—</h1>
+      <span class="cap-sub" id="capSub">—</span>
+    </div>
+  </div>
+
+  <nav class="rail" id="rail" aria-label="Atalhos FLORESTi"></nav>
+</main>
+
+<div class="overlay" id="overlay" role="dialog" aria-modal="true">
+  <div class="ov-card">
+    <div class="ov-k">Câmeras de segurança</div>
+    <h2 class="ov-h">Entrada <b>HDMI 3</b></h2>
+    <p class="ov-p">No controle da TV, aperte o botão <b>Entrada</b> (Source / Input) e selecione <b>HDMI 3</b> para ver as câmeras ao vivo.</p>
+    <div class="ov-hint">Para voltar ao painel, escolha a entrada da TV de novo · ou aperte Voltar / OK</div>
+  </div>
+</div>
+
+<script>
+/* ============================================================
+   GALERIA DE OBRAS — ordem e legendas
+   ============================================================ */
+const GALERIA = [
+  { img:"img/obra-porticos-mlc.jpg",     label:"OBRA",        title:"Galpão em pórticos de MLC",   sub:"Pinus estrutural · estrutura exposta" },
+  { img:"img/hero-corredor-pergola.jpg", label:"DETALHE",     title:"Pérgola em corredor",         sub:"Madeira laminada colada · iluminação" },
+  { img:"img/obra-beiral-mlc.jpg",       label:"OBRA",        title:"Beiral em balanço",           sub:"Vigas MLC · cobertura" },
+  { img:"img/pergolado.jpg",             label:"ALTO PADRÃO", title:"Pérgola sobre varanda",       sub:"Estrutura de madeira · pedra" },
+  { img:"img/deck.jpg",                  label:"RESIDENCIAL", title:"Deck e pérgola",              sub:"Pinus · área externa" },
+  { img:"img/projeto-estrutura.jpg",     label:"MONTAGEM",    title:"Estrutura A-frame",           sub:"Chalé · treliça de madeira" },
+];
+
+/* ============================================================
+   ATALHOS — nome, link e ícone (edite à vontade)
+   ============================================================ */
+const IC = {
+  youtube:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2.5" y="5.5" width="19" height="13" rx="3"/><path d="M10 9.4l5 2.6-5 2.6z" fill="currentColor" stroke="none"/></svg>',
+  beams:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 7h18M3 12h18M3 17h18"/></svg>',
+  home:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 11l9-7 9 7"/><path d="M5 10v10h14V10"/></svg>',
+  aframe:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 3L3.5 20h17z"/><path d="M8.5 20L12 11l3.5 9"/></svg>',
+  mount:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 19l6-10 4 6 2.5-4L21 19z"/></svg>',
+  compass:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="9"/><path d="M15.5 8.5l-2 5-5 2 2-5z" fill="currentColor" stroke="none"/></svg>',
+  factory:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 21V10l6 4V10l6 4V7l6 4v10z"/></svg>',
+  msg:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20.5 11.5a8 8 0 0 1-11.6 7.1L4 20l1.4-4.9A8 8 0 1 1 20.5 11.5z"/></svg>',
+  cam:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 8.4l13-3.1 1 4.2-13 3.1z"/><path d="M6 12.3V16a1.6 1.6 0 0 0 1.6 1.6H11"/><circle cx="12.4" cy="19.2" r="1.7"/><path d="M17.2 7.8l3.3-1"/></svg>',
+};
+const ATALHOS = [
+  { label:"VÍDEO",      nome:"YouTube",       url:"https://www.youtube.com",                ico:IC.youtube },
+  { label:"PRODUTO",    nome:"MLC Estrutural",nome2:"",url:"https://lp.floresti.eng.br/",    ico:IC.beams },
+  { label:"CONSTRUTORA",nome:"Casas Alto Padrão",url:"https://lp.floresti.eng.br/construtora/", ico:IC.home },
+  { label:"PRODUTO",    nome:"Chalé A-frame", url:"https://lp.floresti.eng.br/chale/",       ico:IC.aframe },
+  { label:"PRODUTO",    nome:"Cabanas TRÄ",   url:"https://tra.floresti.eng.br/",            ico:IC.mount },
+  { label:"TÉCNICO",    nome:"Arquitetos",    url:"https://lp.floresti.eng.br/arquitetos/",  ico:IC.compass },
+  { label:"INDÚSTRIA",  nome:"Colagem MLC",   url:"https://industria.floresti.eng.br/",      ico:IC.factory },
+  { label:"AO VIVO",    nome:"Câmeras",       sub:"HDMI 3", action:"cameras",                ico:IC.cam },
+];
+
+/* ---------- monta o rail ---------- */
+const rail=document.getElementById("rail");
+ATALHOS.forEach(a=>{
+  const el=document.createElement("a");
+  el.className="tile"; el.href=a.url||"#"; el.setAttribute("aria-label",a.nome);
+  const sub=a.sub?'<span class="t-sub">'+a.sub+'</span>':'';
+  el.innerHTML='<span class="ico">'+a.ico+'</span>'+
+               '<span class="t-txt"><span class="t-label">'+a.label+'</span>'+
+               '<span class="t-name">'+a.nome+'</span>'+sub+'</span>';
+  if(a.action==="cameras") el.addEventListener("click",ev=>{ev.preventDefault();openOverlay();});
+  rail.appendChild(el);
+});
+const navItems=[...document.querySelectorAll(".tile")];
+
+/* ---------- navegação por setas (controle) ---------- */
+function moveFocus(cur,dir){
+  const c=cur.getBoundingClientRect(); let best=null,score=Infinity;
+  navItems.forEach(t=>{
+    if(t===cur) return;
+    const r=t.getBoundingClientRect();
+    const dx=(r.left+r.width/2)-(c.left+c.width/2);
+    const dy=(r.top+r.height/2)-(c.top+c.height/2);
+    let ok=false,main=0,cross=0;
+    if(dir==="ArrowRight"){ok=dx>8;main=dx;cross=Math.abs(dy)}
+    if(dir==="ArrowLeft"){ok=dx<-8;main=-dx;cross=Math.abs(dy)}
+    if(dir==="ArrowDown"){ok=dy>8;main=dy;cross=Math.abs(dx)}
+    if(dir==="ArrowUp"){ok=dy<-8;main=-dy;cross=Math.abs(dx)}
+    if(!ok) return;
+    const s=main+cross*2; if(s<score){score=s;best=t}
+  });
+  if(best) best.focus();
+}
+const overlay=document.getElementById("overlay");
+function openOverlay(){ overlay.classList.add("on"); }
+function closeOverlay(){ overlay.classList.remove("on"); }
+overlay.addEventListener("click",closeOverlay);
+document.addEventListener("keydown",e=>{
+  if(overlay.classList.contains("on")){ e.preventDefault(); closeOverlay(); return; }
+  const nav=["ArrowRight","ArrowLeft","ArrowUp","ArrowDown"];
+  const act=document.activeElement;
+  const onItem=act&&navItems.includes(act);
+  if(nav.includes(e.key)){ e.preventDefault(); moveFocus(onItem?act:navItems[0], e.key); }
+  if((e.key==="Enter"||e.keyCode===13)&&onItem){ act.click(); }
+});
+window.addEventListener("load",()=>navItems[0]&&navItems[0].focus());
+window.addEventListener("focus",()=>{ if(!navItems.includes(document.activeElement)) navItems[0]&&navItems[0].focus(); });
+
+/* ---------- relógio + data ---------- */
+function tick(){
+  const d=new Date();
+  document.getElementById("clock").textContent =
+    String(d.getHours()).padStart(2,"0")+":"+String(d.getMinutes()).padStart(2,"0");
+  let dt=d.toLocaleDateString("pt-BR",{weekday:"long",day:"numeric",month:"long"});
+  document.getElementById("date").textContent = dt.charAt(0).toUpperCase()+dt.slice(1);
+}
+tick(); setInterval(tick,15000);
+
+/* ---------- slideshow ---------- */
+const stage=document.getElementById("stage");
+const reduce=window.matchMedia("(prefers-reduced-motion:reduce)").matches;
+const slides=GALERIA.map((g,i)=>{
+  const s=document.createElement("div");
+  s.className="slide"; s.style.backgroundImage="url('"+g.img+"')";
+  s.style.transformOrigin=(i%2?"70% 40%":"30% 60%");
+  stage.appendChild(s); return s;
+});
+const cap=document.getElementById("cap");
+const capLabel=document.getElementById("capLabel");
+const capTitle=document.getElementById("capTitle");
+const capSub=document.getElementById("capSub");
+let idx=-1;
+function show(n){
+  slides.forEach(s=>s.classList.remove("on","kb"));
+  const s=slides[n]; s.classList.add("on"); if(!reduce) s.classList.add("kb");
+  cap.classList.remove("show");
+  setTimeout(()=>{
+    capLabel.textContent=GALERIA[n].label;
+    capTitle.textContent=GALERIA[n].title;
+    capSub.textContent=GALERIA[n].sub;
+    cap.classList.add("show");
+  },260);
+}
+function next(){ idx=(idx+1)%slides.length; show(idx); }
+next(); setInterval(next, 8000);
+</script>
