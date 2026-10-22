@@ -270,7 +270,8 @@ function moveFocus(cur,dir){
     if(!ok) return;
     const s=main+cross*2; if(s<score){score=s;best=t}
   });
-  if(best) best.focus();
+  if(best){ best.focus(); return true; }
+  return false;
 }
 const overlay=document.getElementById("overlay");
 function openOverlay(){ overlay.classList.add("on"); }
@@ -281,7 +282,10 @@ document.addEventListener("keydown",e=>{
   const nav=["ArrowRight","ArrowLeft","ArrowUp","ArrowDown"];
   const act=document.activeElement;
   const onItem=act&&navItems.includes(act);
-  if(nav.includes(e.key)){ e.preventDefault(); moveFocus(onItem?act:navItems[0], e.key); }
+  if(nav.includes(e.key)){
+    if(onItem){ if(moveFocus(act,e.key)) e.preventDefault(); }
+    else if(navItems[0]){ navItems[0].focus(); e.preventDefault(); }
+  }
   if((e.key==="Enter"||e.keyCode===13)&&onItem){ act.click(); }
 });
 window.addEventListener("load",()=>navItems[0]&&navItems[0].focus());
