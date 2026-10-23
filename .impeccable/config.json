@@ -1,0 +1,14 @@
+{
+  "detector": {
+    "ignoreRules": [],
+    "ignoreFiles": [],
+    "ignoreValues": [
+      {
+        "rule": "overused-font",
+        "value": "helvetica",
+        "createdAt": "2026-10-23T12:18:59.331Z",
+        "reason": "Versao lite para navegador antigo de TV nao carrega webfonts; fonte do sistema e obrigatoria"
+      }
+    ]
+  }
+}

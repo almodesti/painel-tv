@@ -1,0 +1,211 @@
+<meta charset="utf-8">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>FLORESTi</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+/* ===== Versao LITE — navegador antigo de TV =====
+   Sem clamp/grid/gap, sem webfonts, JS em ES5, conteudo estatico primeiro. */
+* { margin:0; padding:0; }
+html, body { width:100%; height:100%; overflow:hidden; background:#040F0E;
+  font-family:'Helvetica Neue',Helvetica,Arial,sans-serif; color:#E9E8E8; }
+
+#bg, #bg2 { position:fixed; top:0; left:0; width:100%; height:100%;
+  background-repeat:no-repeat; background-position:center center;
+  -webkit-background-size:cover; background-size:cover;
+  -webkit-transition:opacity 1s ease; transition:opacity 1s ease; }
+#bg2 { opacity:0; }
+
+.scrim { position:fixed; top:0; left:0; width:100%; height:100%;
+  background:-webkit-linear-gradient(top, rgba(4,15,14,.72), rgba(4,15,14,.10) 42%, rgba(4,15,14,.55) 72%, rgba(4,15,14,.90));
+  background:linear-gradient(to bottom, rgba(4,15,14,.72), rgba(4,15,14,.10) 42%, rgba(4,15,14,.55) 72%, rgba(4,15,14,.90)); }
+.scrimL { position:fixed; top:0; left:0; width:70%; height:100%;
+  background:-webkit-linear-gradient(left, rgba(4,15,14,.78), rgba(4,15,14,0));
+  background:linear-gradient(to right, rgba(4,15,14,.78), rgba(4,15,14,0)); }
+
+/* topo esquerda: marca */
+.brand { position:fixed; top:5vh; left:4vw; }
+.emblem { height:8vh; width:auto; vertical-align:middle; }
+.word { display:inline-block; vertical-align:middle; margin-left:1.4vw;
+  font-size:4.6vw; font-weight:300; letter-spacing:0.09em; line-height:1; }
+.word b { font-weight:600; }
+.tag { margin-top:1vh; font-size:1.15vw; letter-spacing:0.28em; color:#AEBBB0;
+  text-transform:uppercase; }
+
+/* topo direita: relogio + marca pessoal */
+.meta { position:fixed; top:5vh; right:4vw; text-align:right; }
+.clock { font-size:3vw; letter-spacing:0.02em; line-height:1; }
+.date { margin-top:0.6vh; font-size:1.2vw; color:#AEBBB0; }
+.maker { margin-top:1.6vh; display:inline-block; text-align:right; border:1px solid rgba(196,154,78,.45);
+  padding:1vh 1.2vw; }
+.mk { font-family:Georgia,'Times New Roman',serif; font-size:2.6vw; line-height:1; }
+.mk b { color:#C49A4E; }
+.mkt { font-size:0.92vw; letter-spacing:0.14em; color:#8A9A8E; text-transform:uppercase; margin-top:0.8vh; }
+.snd { margin-top:1.4vh; font-size:1vw; color:#AEBBB0; cursor:pointer; }
+.snd:hover { color:#E9E8E8; }
+
+/* legenda da obra */
+.caption { position:fixed; left:4vw; bottom:26vh; width:60%; }
+.capLabel { font-size:1.15vw; letter-spacing:0.3em; color:#C49A4E; text-transform:uppercase; }
+.capTitle { font-family:Georgia,'Times New Roman',serif; font-size:3.6vw; line-height:1.1;
+  margin:0.6vh 0 0.8vh 0; }
+.capSub { display:inline-block; font-size:1.3vw; color:#AEBBB0;
+  border-top:1px solid #957561; padding-top:0.9vh; }
+
+/* barra de atalhos */
+.rail { position:fixed; left:4vw; right:4vw; bottom:5vh; font-size:0; white-space:nowrap; }
+.tile { display:inline-block; vertical-align:top; width:11.3%; height:13vh; margin:0 0.55%;
+  background:rgba(4,15,14,.55); border:1px solid rgba(233,232,232,.16);
+  text-decoration:none; color:#E9E8E8; position:relative; }
+.tbox { position:absolute; left:9%; right:9%; bottom:14%; }
+.tlabel { font-size:0.72vw; letter-spacing:0.16em; color:#8A9A8E; text-transform:uppercase; }
+.tname { font-size:1.15vw; font-weight:bold; margin-top:0.5vh; line-height:1.1; white-space:normal; }
+.tsub { font-size:0.85vw; color:#C49A4E; margin-top:0.3vh; letter-spacing:0.08em; }
+.tile:focus, .tile:hover { border-color:#957561; background:rgba(13,54,46,.72); }
+
+/* overlay cameras */
+.overlay { position:fixed; top:0; left:0; width:100%; height:100%; display:none;
+  background:rgba(4,15,14,.90); text-align:center; }
+.overlay.on { display:block; }
+.ovbox { position:absolute; top:50%; left:50%; width:70%;
+  margin-left:-35%; margin-top:-12vh; }
+.ovk { font-size:1.2vw; letter-spacing:0.32em; color:#B89880; text-transform:uppercase; }
+.ovh { font-size:5vw; font-weight:300; margin:1vh 0; }
+.ovh b { color:#B89880; font-weight:600; }
+.ovp { font-size:1.6vw; color:#AEBBB0; line-height:1.5; }
+.ovp b { color:#E9E8E8; }
+.ovhint { margin-top:3vh; font-size:1.1vw; color:#7A8A7E; }
+</style>
+
+<div id="bg" style="background-image:url('img/obra-porticos-mlc.jpg')"></div>
+<div id="bg2"></div>
+<audio id="bgm" loop preload="auto"><source src="audio/ambiente-loop.mp3" type="audio/mpeg"></audio>
+<div class="scrim"></div>
+<div class="scrimL"></div>
+
+<div class="brand">
+  <img class="emblem" src="img/simbolo-floresti-branco.png" alt="">
+  <span class="word">FLOREST<b>i</b></span>
+  <div class="tag">Soluções Construtivas · MLC Estrutural</div>
+</div>
+
+<div class="meta">
+  <div class="clock" id="clock">--:--</div>
+  <div class="date" id="date">&nbsp;</div>
+  <div class="maker">
+    <div class="mk">Modest<b>IA</b>ndré</div>
+    <div class="mkt">IA aplicada à operação</div>
+  </div>
+  <div class="snd" id="snd" onclick="toggleSnd();">&#9834; Som</div>
+</div>
+
+<div class="caption">
+  <div class="capLabel" id="capLabel">OBRA</div>
+  <div class="capTitle" id="capTitle">Galpão em pórticos de MLC</div>
+  <div class="capSub" id="capSub">Pinus estrutural · estrutura exposta</div>
+</div>
+
+<div class="rail">
+  <a class="tile" href="https://www.youtube.com/tv"><div class="tbox"><div class="tlabel">VÍDEO</div><div class="tname">YouTube</div></div></a>
+  <a class="tile" href="https://lp.floresti.eng.br/"><div class="tbox"><div class="tlabel">PRODUTO</div><div class="tname">MLC Estrutural</div></div></a>
+  <a class="tile" href="https://lp.floresti.eng.br/construtora/"><div class="tbox"><div class="tlabel">CONSTRUTORA</div><div class="tname">Alto Padrão</div></div></a>
+  <a class="tile" href="https://lp.floresti.eng.br/chale/"><div class="tbox"><div class="tlabel">PRODUTO</div><div class="tname">Chalé A-frame</div></div></a>
+  <a class="tile" href="https://tra.floresti.eng.br/"><div class="tbox"><div class="tlabel">PRODUTO</div><div class="tname">Cabanas de Luxo TRÄ House</div></div></a>
+  <a class="tile" href="https://lp.floresti.eng.br/arquitetos/"><div class="tbox"><div class="tlabel">TÉCNICO</div><div class="tname">Arquitetos</div></div></a>
+  <a class="tile" href="https://industria.floresti.eng.br/"><div class="tbox"><div class="tlabel">INDÚSTRIA</div><div class="tname">Colagem MLC</div></div></a>
+  <a class="tile" href="#" onclick="showCam();return false;"><div class="tbox"><div class="tlabel">AO VIVO</div><div class="tname">Câmeras</div><div class="tsub">HDMI 3</div></div></a>
+</div>
+
+<div class="overlay" id="overlay" onclick="hideCam();">
+  <div class="ovbox">
+    <div class="ovk">Câmeras de segurança</div>
+    <div class="ovh">Entrada <b>HDMI 3</b></div>
+    <div class="ovp">No controle da TV, aperte <b>Entrada</b> (Source) e escolha <b>HDMI 3</b> para ver as câmeras.</div>
+    <div class="ovhint">Aperte OK/Voltar para fechar</div>
+  </div>
+</div>
+
+<script type="text/javascript">
+/* ES5 apenas — compativel com navegador antigo */
+var IMG = [
+ {img:'img/obra-porticos-mlc.jpg',     label:'OBRA',        title:'Galpão em pórticos de MLC', sub:'Pinus estrutural · estrutura exposta'},
+ {img:'img/hero-corredor-pergola.jpg', label:'DETALHE',     title:'Pérgola em corredor',      sub:'Madeira laminada colada · iluminação'},
+ {img:'img/obra-beiral-mlc.jpg',       label:'OBRA',        title:'Beiral em balanço',        sub:'Vigas MLC · cobertura'},
+ {img:'img/pergolado.jpg',             label:'ALTO PADRÃO', title:'Pérgola sobre varanda',    sub:'Estrutura de madeira · pedra'},
+ {img:'img/deck.jpg',                  label:'RESIDENCIAL', title:'Deck e pérgola',           sub:'Pinus · área externa'},
+ {img:'img/projeto-estrutura.jpg',     label:'MONTAGEM',    title:'Estrutura A-frame',        sub:'Chalé · treliça de madeira'}
+];
+
+function byId(id){ return document.getElementById(id); }
+function pad(n){ return (n<10?'0':'')+n; }
+
+function tick(){
+  var d=new Date();
+  byId('clock').innerHTML = pad(d.getHours())+':'+pad(d.getMinutes());
+  var dias=['Domingo','Segunda-feira','Terça-feira','Quarta-feira','Quinta-feira','Sexta-feira','Sábado'];
+  var meses=['janeiro','fevereiro','março','abril','maio','junho','julho','agosto','setembro','outubro','novembro','dezembro'];
+  byId('date').innerHTML = dias[d.getDay()]+', '+d.getDate()+' de '+meses[d.getMonth()];
+}
+
+var cur=0, topLayer=0, layers;
+function showCaption(i){
+  byId('capLabel').innerHTML = IMG[i].label;
+  byId('capTitle').innerHTML = IMG[i].title;
+  byId('capSub').innerHTML   = IMG[i].sub;
+}
+function nextSlide(){
+  cur = (cur+1) % IMG.length;
+  var nx = 1 - topLayer;
+  layers[nx].style.backgroundImage = "url('"+IMG[cur].img+"')";
+  layers[nx].style.opacity = 1;
+  layers[topLayer].style.opacity = 0;
+  topLayer = nx;
+  showCaption(cur);
+}
+
+function showCam(){ byId('overlay').className = 'overlay on'; }
+function hideCam(){ byId('overlay').className = 'overlay'; }
+
+document.onkeydown = function(e){
+  e = e || window.event; var k = e.keyCode;
+  if (byId('overlay').className.indexOf('on') >= 0) {
+    hideCam(); if (e.preventDefault) e.preventDefault(); return false;
+  }
+};
+
+/* init */
+layers = [ byId('bg'), byId('bg2') ];
+layers[0].style.opacity = 1;
+tick();
+setInterval(tick, 20000);
+showCaption(0);
+setInterval(nextSlide, 8000);
+
+/* trilha de fundo */
+var bgm = byId('bgm');
+var sndStarted = false;
+if (bgm) bgm.volume = 0.45;
+function sndLabel(){
+  var el = byId('snd'); if(!el) return;
+  if(!sndStarted){ el.innerHTML = '&#9834; Som: aperte OK'; }
+  else if(bgm.muted){ el.innerHTML = '&#9834; Som desligado'; }
+  else { el.innerHTML = '&#9834; Som ligado'; }
+}
+function startBgm(){
+  if(!bgm || sndStarted) return;
+  var p;
+  try { p = bgm.play(); } catch(e){ return; }
+  if (p && p.then){ p.then(function(){ sndStarted = true; sndLabel(); }, function(){}); }
+  else { sndStarted = true; sndLabel(); }
+}
+function toggleSnd(){
+  if(!bgm) return;
+  if(!sndStarted){ startBgm(); return; }
+  bgm.muted = !bgm.muted; sndLabel();
+}
+startBgm();
+if (document.addEventListener){
+  document.addEventListener('keydown', startBgm, false);
+  document.addEventListener('click', startBgm, false);
+}
+sndLabel();
+</script>
